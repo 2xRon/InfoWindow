@@ -1,4 +1,8 @@
 {
+    "driver" : {
+        "driverlib" : "epd7in5b",
+        "useColor" : true
+    },
     "general": {
         "rotation": 180,
         "timeformat": "12h",

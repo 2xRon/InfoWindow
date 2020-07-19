@@ -1,4 +1,4 @@
-from driver import epd7in5b
+from driver import epd7in5_V2
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
@@ -6,15 +6,17 @@ from PIL import ImageChops
 import os, sys
 import logging
 import tempfile
+import importlib
 
 
 class InfoWindow:
-    def __init__(self, options):
-        self.epd = epd7in5b.EPD()
+    def __init__(self, **options):
+        #driver_lib = importlib.import_module("driver."+driver)
+        self.epd = epd7in5_V2.EPD()
         self.epd.init()
-        self.width = 640
-        self.height = 384
-        self.image = Image.new('L', (640, 384), 255)
+        self.width = epd7in5_V2.EPD_WIDTH
+        self.height = epd7in5_V2.EPD_HEIGHT
+        self.image = Image.new('L', (self.width, self.height), 255)
         self.draw = ImageDraw.Draw(self.image)
         self.fonts = {}
         self.initFonts()
@@ -95,7 +97,8 @@ class InfoWindow:
         if new_image_found:
             logging.info("New information in the image detected. Updating the screen.")
             self.image.save(self.tmpImagePath)
-            self.epd.display_frame(self.epd.get_frame_buffer(self.image))
+            # self.epd.display_frame(self.epd.get_frame_buffer(self.image))
+            self.epd.display(self.epd.getbuffer(self.image))
             self.epd.sleep()
         else:
             logging.info("No new information found. Not updating the screen.")
